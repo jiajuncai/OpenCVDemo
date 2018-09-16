@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.junecai.opencvdemo.util.PermissionUtil;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1111;
     private ImageView mIvOutput;
+    private Button mBtnWrap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,14 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
         setContentView(R.layout.activity_main);
         mIvOutput = findViewById(R.id.iv_ouput);
-//        mIvOutput.setImageBitmap(warp(getImageFromAssetsFile("WechatIMG5.jpeg"), new MyPoint(200, 180), new MyPoint(830, 187), new MyPoint(150, 1142), new MyPoint(932, 1108)));
+        mIvOutput.setImageBitmap(getImageFromAssetsFile("WechatIMG5.jpeg"));
+        mBtnWrap = findViewById(R.id.btn_warp);
+        mBtnWrap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIvOutput.setImageBitmap(warp(getImageFromAssetsFile("WechatIMG5.jpeg"), new MyPoint(200, 180), new MyPoint(150, 1142), new MyPoint(932, 1108), new MyPoint(830, 187)));
+            }
+        });
     }
 
     /**
@@ -128,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
         dest.add(ocvPOut4);
         Mat endM = Converters.vector_Point2f_to_Mat(dest);
 
-//        Mat perspectiveTransform = Imgproc.getPerspectiveTransform(startM, endM);
-        Mat perspectiveTransform = new Mat(3, 3, CvType.CV_32FC1);
+        Mat perspectiveTransform = Imgproc.getPerspectiveTransform(startM, endM);
+//        Mat perspectiveTransform = new Mat(3, 3, CvType.CV_32FC1);
 //        Core.perspectiveTransform(startM, endM, perspectiveTransform);
         Imgproc.warpPerspective(inputMat,
                 outputMat,
@@ -177,11 +187,7 @@ public class MainActivity extends AppCompatActivity {
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
-//                    Log.i(TAG, "OpenCV loaded successfully");
-//                    mOpenCvCameraView.enableView();
-//                    mOpenCvCameraView.setOnTouchListener(ColorBlobDetectionActivity.this);
-                    mIvOutput.setImageBitmap(warp(getImageFromAssetsFile("WechatIMG5.jpeg"), new MyPoint(200, 180), new MyPoint(830, 187), new MyPoint(150, 1142), new MyPoint(932, 1108)));
-
+//                    mIvOutput.setImageBitmap(warp(getImageFromAssetsFile("WechatIMG5.jpeg"), new MyPoint(200, 180), new MyPoint(150, 1142), new MyPoint(932, 1108), new MyPoint(830, 187)));
                 }
                 break;
                 default: {
